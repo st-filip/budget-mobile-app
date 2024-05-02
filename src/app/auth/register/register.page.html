@@ -1,13 +1,69 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-title>Register</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">register</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <form
+    #registerForm="ngForm"
+    (ngSubmit)="onRegister(registerForm)"
+    class="ion-padding-horizontal"
+  >
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-list lines="full">
+            <ion-item *ngIf="registerError" lines="none">
+              <ion-text color="danger">
+                <p class="ion-text-center">{{ registerError }}</p>
+              </ion-text>
+            </ion-item>
+            <ion-item class="ion-no-padding">
+              <ion-input
+                type="email"
+                label="Email"
+                label-placement="floating"
+                name="email"
+                ngModel
+                email
+                required
+              ></ion-input>
+            </ion-item>
+            <ion-item class="ion-no-padding">
+              <ion-input
+                type="password"
+                label="Password"
+                label-placement="floating"
+                ngModel
+                name="password"
+                minlength="8"
+                required
+              ></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            shape="round"
+            size="medium"
+            [disabled]="registerForm.invalid"
+            >Register
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <p class="ion-text-center">
+            Already have an account? <a routerLink="/login">Log in</a>
+          </p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
