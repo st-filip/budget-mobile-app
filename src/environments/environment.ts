@@ -4,9 +4,8 @@
 
 export const environment = {
   production: false,
-  firebaseApiKey: 'AIzaSyD3wXGt-vpDPWgzbTHJgKhGGp94V1bHIsg',
-  firebaseDatabaseUrl:
-    'https://budget-mobile-app-2606-default-rtdb.europe-west1.firebasedatabase.app/',
+  firebaseApiKey: 'Your API key',
+  firebaseDatabaseUrl: 'Your Firebase Database URL',
 };
 
 /*
