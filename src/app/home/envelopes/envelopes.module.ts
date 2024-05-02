@@ -7,14 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { EnvelopesPageRoutingModule } from './envelopes-routing.module';
 
 import { EnvelopesPage } from './envelopes.page';
+import { EnvelopeElementComponent } from './envelope-element/envelope-element.component';
+import { EnvelopeModalComponent } from './envelope-modal/envelope-modal.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    EnvelopesPageRoutingModule
+  imports: [CommonModule, FormsModule, IonicModule, EnvelopesPageRoutingModule],
+  declarations: [
+    EnvelopesPage,
+    EnvelopeElementComponent,
+    EnvelopeModalComponent,
   ],
-  declarations: [EnvelopesPage]
 })
 export class EnvelopesPageModule {}
