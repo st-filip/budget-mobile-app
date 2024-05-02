@@ -6,6 +6,14 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+  },
+  {
+    path: 'envelopes',
+    loadChildren: () => import('./envelopes/envelopes.module').then( m => m.EnvelopesPageModule)
+  },
+  {
+    path: 'transactions',
+    loadChildren: () => import('./transactions/transactions.module').then( m => m.TransactionsPageModule)
   }
 ];
 
