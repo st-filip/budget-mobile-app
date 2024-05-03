@@ -13,10 +13,20 @@ export class EnvelopeElementComponent implements OnInit {
     category: '',
     type: '',
     totalExpense: 0,
-    currentMoney: 0,
+    available: 0,
   };
 
   constructor() {}
 
   ngOnInit() {}
+
+  getAvailableColor(available: number): string {
+    if (available > 0) {
+      return 'success';
+    } else if (available < 0) {
+      return 'danger';
+    } else {
+      return 'dark';
+    }
+  }
 }

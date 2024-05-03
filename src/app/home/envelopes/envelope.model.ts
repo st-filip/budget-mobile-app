@@ -3,7 +3,7 @@ export interface Envelope {
   user?: string;
   category: string;
   budget: number;
-  currentMoney?: number;
+  available: number;
   totalExpense?: number;
   type: string;
 }

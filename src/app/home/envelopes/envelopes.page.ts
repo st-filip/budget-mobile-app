@@ -11,6 +11,10 @@ import { EnvelopeModalComponent } from './envelope-modal/envelope-modal.componen
 })
 export class EnvelopesPage implements OnInit, ViewWillEnter {
   envelopes: Envelope[] = [];
+  monthlyEnvelopes: Envelope[] = [];
+  annualEnvelopes: Envelope[] = [];
+  goalsEnvelopes: Envelope[] = [];
+  availableEnvelopes: Envelope[] = [];
 
   constructor(
     private envelopesService: EnvelopesService,
@@ -24,6 +28,18 @@ export class EnvelopesPage implements OnInit, ViewWillEnter {
   ngOnInit() {
     this.envelopesService.envelopes.subscribe((envelopes) => {
       this.envelopes = envelopes;
+      this.monthlyEnvelopes = envelopes.filter(
+        (envelope) => envelope.type === 'Monthly'
+      );
+      this.annualEnvelopes = envelopes.filter(
+        (envelope) => envelope.type === 'Annual'
+      );
+      this.goalsEnvelopes = envelopes.filter(
+        (envelope) => envelope.type === 'Goal'
+      );
+      this.availableEnvelopes = envelopes.filter(
+        (envelope) => envelope.type === 'Available'
+      );
     });
   }
 

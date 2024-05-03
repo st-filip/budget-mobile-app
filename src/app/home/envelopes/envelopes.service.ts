@@ -9,7 +9,7 @@ interface EnvelopeData {
   user?: string;
   category: string;
   budget: number;
-  currentMoney?: number;
+  available?: number;
   totalExpense?: number;
   type: string;
 }
@@ -29,6 +29,7 @@ export class EnvelopesService {
   addEnvelope(category: string, budget: number, type: string) {
     let generatedId: string;
     let user: string | undefined = this.authService.getUserId();
+    let available = 0;
     return this.http
       .post<{ name: string }>(
         `${
@@ -38,6 +39,7 @@ export class EnvelopesService {
           user,
           category,
           budget,
+          available,
           type,
         }
       )
@@ -54,6 +56,7 @@ export class EnvelopesService {
               user,
               category,
               budget,
+              available,
               type,
             })
           );
@@ -70,19 +73,33 @@ export class EnvelopesService {
       )
       .pipe(
         map((envelopesData: any) => {
-          const envelopes: Envelope[] = [];
-          for (const key in envelopesData) {
-            if (envelopesData.hasOwnProperty(key)) {
-              envelopes.push({
-                id: key,
-                user: envelopesData[key].user,
-                category: envelopesData[key].category,
-                budget: envelopesData[key].budget,
-                type: envelopesData[key].type,
-              });
+          if (envelopesData && Object.keys(envelopesData).length === 0) {
+            // If envelopesData is empty, add a default envelope
+            this.addEnvelope('Available', 0, 'Available').subscribe({
+              next: (res) => {
+                console.log('Default envelope added');
+              },
+              error: (error) => {
+                console.error('Error adding default envelope:', error);
+              },
+            });
+            return [];
+          } else {
+            const envelopes: Envelope[] = [];
+            for (const key in envelopesData) {
+              if (envelopesData.hasOwnProperty(key)) {
+                envelopes.push({
+                  id: key,
+                  user: envelopesData[key].user,
+                  category: envelopesData[key].category,
+                  budget: envelopesData[key].budget,
+                  available: envelopesData[key].available,
+                  type: envelopesData[key].type,
+                });
+              }
             }
+            return envelopes;
           }
-          return envelopes;
         }),
         tap((envelopes) => {
           this._envelopes.next(envelopes);

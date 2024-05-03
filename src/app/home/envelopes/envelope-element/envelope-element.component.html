@@ -1,15 +1,37 @@
-<ion-item-sliding>
+<ion-item-sliding *ngIf="envelope.type !== 'Available'">
   <ion-item>
     <ion-label>{{ envelope.category }}</ion-label>
-    <ion-note slot="end" color="primary" class="ion-margin-horizontal">{{
-      envelope.currentMoney | currency
-    }}</ion-note>
-    <ion-note slot="end" color="danger">{{
-      envelope.totalExpense | currency
-    }}</ion-note>
+    <div slot="end" class="ion-text-end">
+      <ion-note
+        color="dark"
+        style="display: block; padding-bottom: 5px; margin-top: 5px"
+      >
+        {{ envelope.type === "Goal" ? "goal:" : "budget:" }}
+        {{ envelope.budget | currency }}</ion-note
+      >
+      <ion-note
+        [color]="getAvailableColor(envelope.available)"
+        style="display: block; padding-top: 5px; margin-bottom: 5px"
+        >available: {{ envelope.available | currency }}</ion-note
+      >
+    </div>
   </ion-item>
   <ion-item-options>
     <ion-item-option>Edit</ion-item-option>
     <ion-item-option color="danger">Delete</ion-item-option>
   </ion-item-options>
+</ion-item-sliding>
+
+<ion-item-sliding *ngIf="envelope.type === 'Available'">
+  <ion-item>
+    <ion-label>{{ envelope.category }}</ion-label>
+    <div slot="end" class="ion-text-end">
+      <ion-note
+        color="primary"
+        style="display: block; padding-bottom: 5px; margin-top: 5px"
+      >
+        {{ envelope.available | currency }}</ion-note
+      >
+    </div>
+  </ion-item>
 </ion-item-sliding>

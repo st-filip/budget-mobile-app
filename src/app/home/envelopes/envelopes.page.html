@@ -5,15 +5,61 @@
 </ion-header>
 
 <ion-content>
-  <ion-list lines="full">
-    <app-envelope-element
-      *ngFor="let envelope of envelopes"
-      [envelope]="envelope"
-    ></app-envelope-element>
-  </ion-list>
+  <!-- Monthly Envelopes -->
+  <ion-item-group *ngIf="monthlyEnvelopes.length!==0">
+    <ion-item-divider>
+      <ion-label> Monthly </ion-label>
+    </ion-item-divider>
+    <ion-list lines="full" class="ion-no-padding">
+      <app-envelope-element
+        *ngFor="let envelope of monthlyEnvelopes"
+        [envelope]="envelope"
+      ></app-envelope-element>
+    </ion-list>
+  </ion-item-group>
 
+  <!-- Annual Envelopes -->
+  <ion-item-group *ngIf="annualEnvelopes.length!==0">
+    <ion-item-divider>
+      <ion-label> Annual </ion-label>
+    </ion-item-divider>
+    <ion-list lines="full" class="ion-no-padding">
+      <app-envelope-element
+        *ngFor="let envelope of annualEnvelopes"
+        [envelope]="envelope"
+      ></app-envelope-element>
+    </ion-list>
+  </ion-item-group>
+
+  <!-- Goals Envelopes -->
+  <ion-item-group *ngIf="goalsEnvelopes.length!==0">
+    <ion-item-divider>
+      <ion-label> Goals </ion-label>
+    </ion-item-divider>
+    <ion-list lines="full" class="ion-no-padding">
+      <app-envelope-element
+        *ngFor="let envelope of goalsEnvelopes"
+        [envelope]="envelope"
+      ></app-envelope-element>
+    </ion-list>
+  </ion-item-group>
+
+  <!-- Available Envelopes -->
+  <ion-item-group *ngIf="availableEnvelopes.length!==0">
+    <ion-item-divider>
+      <ion-label> Available </ion-label>
+    </ion-item-divider>
+    <ion-list lines="full" class="ion-no-padding">
+      <app-envelope-element
+        *ngFor="let envelope of availableEnvelopes"
+        [envelope]="envelope"
+      ></app-envelope-element>
+    </ion-list>
+  </ion-item-group>
+
+  <!-- Floating Action Button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openModal()">
+    <ion-fab-button (click)="openModal()" size="small">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
