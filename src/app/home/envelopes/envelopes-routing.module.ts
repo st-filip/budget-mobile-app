@@ -6,8 +6,15 @@ import { EnvelopesPage } from './envelopes.page';
 const routes: Routes = [
   {
     path: '',
-    component: EnvelopesPage
-  }
+    component: EnvelopesPage,
+  },
+  {
+    path: ':envelopeId',
+    loadChildren: () =>
+      import('./envelope-details/envelope-details.module').then(
+        (m) => m.EnvelopeDetailsPageModule
+      ),
+  },
 ];
 
 @NgModule({

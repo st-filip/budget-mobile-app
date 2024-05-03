@@ -74,6 +74,6 @@ export class AuthService {
   }
 
   getUserId() {
-    return this.user?.id;
+    return this.user!.id;
   }
 }

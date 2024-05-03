@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/quotes/tabs/explore"> </ion-back-button>
+    </ion-buttons>
+    <ion-title>Envelope details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-text-center ion-margin-vertical" *ngIf="isLoading">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <ion-list lines="full" *ngIf="!isLoading">
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-note slot="end">{{ envelope.category }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-note slot="end">{{ envelope.type }}</ion-note>
+    </ion-item>
+    <ion-item *ngIf="envelope.type !== 'Available'">
+      <ion-label
+        >{{ envelope.type === "Goal" ? "Goal:" : "Budget:" }}</ion-label
+      >
+      <ion-note slot="end">{{ envelope.budget }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-label>Available</ion-label>
+      <ion-note slot="end">{{ envelope.available }}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

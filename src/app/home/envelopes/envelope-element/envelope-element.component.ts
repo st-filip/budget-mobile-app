@@ -9,10 +9,10 @@ import { Envelope } from '../envelope.model';
 export class EnvelopeElementComponent implements OnInit {
   @Input() envelope: Envelope = {
     id: '',
+    user: '',
     budget: 0,
     category: '',
     type: '',
-    totalExpense: 0,
     available: 0,
   };
 
@@ -20,10 +20,13 @@ export class EnvelopeElementComponent implements OnInit {
 
   ngOnInit() {}
 
-  getAvailableColor(available: number): string {
-    if (available > 0) {
+  getAvailableColor(envelope: Envelope): string {
+    if (envelope.type === 'Available') {
+      return 'dark';
+    }
+    if (envelope.available > 0) {
       return 'success';
-    } else if (available < 0) {
+    } else if (envelope.available < 0) {
       return 'danger';
     } else {
       return 'dark';

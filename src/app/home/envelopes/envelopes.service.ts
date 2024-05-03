@@ -6,11 +6,10 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { environment } from 'src/environments/environment';
 
 interface EnvelopeData {
-  user?: string;
+  user: string;
   category: string;
   budget: number;
-  available?: number;
-  totalExpense?: number;
+  available: number;
   type: string;
 }
 
@@ -28,7 +27,7 @@ export class EnvelopesService {
 
   addEnvelope(category: string, budget: number, type: string) {
     let generatedId: string;
-    let user: string | undefined = this.authService.getUserId();
+    let user: string = this.authService.getUserId();
     let available = 0;
     return this.http
       .post<{ name: string }>(
@@ -103,6 +102,28 @@ export class EnvelopesService {
         }),
         tap((envelopes) => {
           this._envelopes.next(envelopes);
+        })
+      );
+  }
+
+  getEnvelope(id: string) {
+    return this.http
+      .get<EnvelopeData>(
+        `${
+          environment.firebaseDatabaseUrl
+        }envelopes/${id}.json?auth=${this.authService.getToken()}`
+      )
+      .pipe(
+        map((resData) => {
+          console.log(resData);
+          return {
+            id,
+            user: resData.user,
+            category: resData.category,
+            budget: resData.budget,
+            available: resData.available,
+            type: resData.type,
+          };
         })
       );
   }
