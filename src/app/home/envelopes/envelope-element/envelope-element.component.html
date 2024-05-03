@@ -19,6 +19,8 @@
   </ion-item>
   <ion-item-options *ngIf="envelope.category != 'Available'">
     <ion-item-option>Edit</ion-item-option>
-    <ion-item-option color="danger">Delete</ion-item-option>
+    <ion-item-option color="danger" (click)="onDelete(envelope.id)"
+      >Delete</ion-item-option
+    >
   </ion-item-options>
 </ion-item-sliding>

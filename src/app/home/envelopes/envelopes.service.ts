@@ -127,4 +127,22 @@ export class EnvelopesService {
         })
       );
   }
+
+  deleteEnvelope(id: string) {
+    return this.http
+      .delete<void>(
+        `${
+          environment.firebaseDatabaseUrl
+        }envelopes/${id}.json?auth=${this.authService.getToken()}`
+      )
+      .pipe(
+        switchMap(() => {
+          const updatedEnvelopes = this._envelopes.value.filter(
+            (envelope) => envelope.id !== id
+          );
+          this._envelopes.next(updatedEnvelopes);
+          return updatedEnvelopes;
+        })
+      );
+  }
 }

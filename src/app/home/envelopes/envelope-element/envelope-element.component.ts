@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Envelope } from '../envelope.model';
+import { EnvelopesService } from '../envelopes.service';
 
 @Component({
   selector: 'app-envelope-element',
@@ -16,7 +17,7 @@ export class EnvelopeElementComponent implements OnInit {
     available: 0,
   };
 
-  constructor() {}
+  constructor(private envelopesService: EnvelopesService) {}
 
   ngOnInit() {}
 
@@ -31,5 +32,11 @@ export class EnvelopeElementComponent implements OnInit {
     } else {
       return 'dark';
     }
+  }
+
+  onDelete(envelopeId: string) {
+    this.envelopesService.deleteEnvelope(envelopeId).subscribe(() => {
+      console.log('Deleted successfully');
+    });
   }
 }
