@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Envelope } from './envelope.model';
 import { EnvelopesService } from 'src/app/home/envelopes/envelopes.service';
-import { ModalController, ViewWillEnter } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  ViewWillEnter,
+} from '@ionic/angular';
 import { EnvelopeModalComponent } from './envelope-modal/envelope-modal.component';
 
 @Component({
@@ -18,7 +22,8 @@ export class EnvelopesPage implements OnInit, ViewWillEnter {
 
   constructor(
     private envelopesService: EnvelopesService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
   ) {}
 
   ionViewWillEnter() {
@@ -52,16 +57,29 @@ export class EnvelopesPage implements OnInit, ViewWillEnter {
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      console.log(data);
-      this.envelopesService
-        .addEnvelope(
-          data.envelopeData.category,
-          data.envelopeData.budget,
-          data.envelopeData.type
-        )
-        .subscribe((res) => {
-          console.log(res);
+      const categoryExists = this.envelopes.some(
+        (envelope) => envelope.category === data.envelopeData.category
+      );
+
+      if (!categoryExists) {
+        this.envelopesService
+          .addEnvelope(
+            data.envelopeData.category,
+            data.envelopeData.budget,
+            data.envelopeData.type
+          )
+          .subscribe((res) => {
+            console.log(res);
+          });
+      } else {
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: 'Category already exists.',
+          buttons: ['OK'],
         });
+
+        await alert.present();
+      }
     }
   }
 }
