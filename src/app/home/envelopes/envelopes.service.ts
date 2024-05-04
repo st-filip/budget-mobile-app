@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
 import { Envelope } from './envelope.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -137,11 +137,59 @@ export class EnvelopesService {
       )
       .pipe(
         switchMap(() => {
+          const deletedEnvelope = this._envelopes.value.find(
+            (envelope) => envelope.id === id
+          );
+
           const updatedEnvelopes = this._envelopes.value.filter(
             (envelope) => envelope.id !== id
           );
+
           this._envelopes.next(updatedEnvelopes);
-          return updatedEnvelopes;
+
+          const availableEnvelope = updatedEnvelopes.find(
+            (envelope) => envelope.category === 'Available'
+          );
+
+          if (availableEnvelope) {
+            availableEnvelope.available =
+              availableEnvelope.available + +deletedEnvelope!.available;
+
+            return this.updateAvailableEnvelope(availableEnvelope).pipe(
+              map(() => updatedEnvelopes)
+            );
+          } else {
+            return of(updatedEnvelopes);
+          }
+        })
+      );
+  }
+  updateAvailableEnvelope(availableEnvelope: Envelope) {
+    const envelopeData: EnvelopeData = {
+      user: availableEnvelope.user,
+      category: availableEnvelope.category,
+      budget: availableEnvelope.budget,
+      available: availableEnvelope.available,
+      type: availableEnvelope.type,
+    };
+
+    return this.http
+      .put<void>(
+        `${environment.firebaseDatabaseUrl}envelopes/${
+          availableEnvelope.id
+        }.json?auth=${this.authService.getToken()}`,
+        envelopeData
+      )
+      .pipe(
+        tap(() => {
+          const updatedEnvelopes = this._envelopes.value.map((envelope) => {
+            if (envelope.id === availableEnvelope.id) {
+              return availableEnvelope;
+            } else {
+              return envelope;
+            }
+          });
+          this._envelopes.next(updatedEnvelopes);
         })
       );
   }
