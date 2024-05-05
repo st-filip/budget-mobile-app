@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Envelope } from '../envelope.model';
 import { EnvelopesService } from '../envelopes.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-envelope-element',
@@ -17,7 +18,12 @@ export class EnvelopeElementComponent implements OnInit {
     available: 0,
   };
 
-  constructor(private envelopesService: EnvelopesService) {}
+  @Output() editEnvelope: EventEmitter<Envelope> = new EventEmitter<Envelope>();
+
+  constructor(
+    private envelopesService: EnvelopesService,
+    private alertCtrl: AlertController
+  ) {}
 
   ngOnInit() {}
 
@@ -34,9 +40,35 @@ export class EnvelopeElementComponent implements OnInit {
     }
   }
 
-  onDelete(envelopeId: string) {
-    this.envelopesService.deleteEnvelope(envelopeId).subscribe(() => {
-      console.log('Deleted successfully');
+  async onDelete(envelopeId: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete',
+      message:
+        'Are you sure you want to delete this envelope? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Delete canceled');
+          },
+        },
+        {
+          text: 'Delete',
+          cssClass: 'delete-alert-button',
+          handler: () => {
+            this.envelopesService.deleteEnvelope(envelopeId).subscribe(() => {
+              console.log('Deleted successfully');
+            });
+          },
+        },
+      ],
     });
+
+    await alert.present();
+  }
+
+  onEdit(envelope: Envelope) {
+    this.editEnvelope.emit(envelope);
   }
 }

@@ -14,6 +14,7 @@
       <app-envelope-element
         *ngFor="let envelope of monthlyEnvelopes"
         [envelope]="envelope"
+        (editEnvelope)="openModal($event)"
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
@@ -27,6 +28,7 @@
       <app-envelope-element
         *ngFor="let envelope of annualEnvelopes"
         [envelope]="envelope"
+        (editEnvelope)="openModal($event)"
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
@@ -40,6 +42,7 @@
       <app-envelope-element
         *ngFor="let envelope of goalsEnvelopes"
         [envelope]="envelope"
+        (editEnvelope)="openModal($event)"
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>

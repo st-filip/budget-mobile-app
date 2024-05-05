@@ -155,7 +155,7 @@ export class EnvelopesService {
             availableEnvelope.available =
               availableEnvelope.available + +deletedEnvelope!.available;
 
-            return this.updateAvailableEnvelope(availableEnvelope).pipe(
+            return this.updateEnvelope(availableEnvelope).pipe(
               map(() => updatedEnvelopes)
             );
           } else {
@@ -164,27 +164,28 @@ export class EnvelopesService {
         })
       );
   }
-  updateAvailableEnvelope(availableEnvelope: Envelope) {
+
+  updateEnvelope(envelopeEdit: Envelope) {
     const envelopeData: EnvelopeData = {
-      user: availableEnvelope.user,
-      category: availableEnvelope.category,
-      budget: availableEnvelope.budget,
-      available: availableEnvelope.available,
-      type: availableEnvelope.type,
+      user: envelopeEdit.user,
+      category: envelopeEdit.category,
+      budget: envelopeEdit.budget,
+      available: envelopeEdit.available,
+      type: envelopeEdit.type,
     };
 
     return this.http
       .put<void>(
         `${environment.firebaseDatabaseUrl}envelopes/${
-          availableEnvelope.id
+          envelopeEdit.id
         }.json?auth=${this.authService.getToken()}`,
         envelopeData
       )
       .pipe(
         tap(() => {
           const updatedEnvelopes = this._envelopes.value.map((envelope) => {
-            if (envelope.id === availableEnvelope.id) {
-              return availableEnvelope;
+            if (envelope.id === envelopeEdit.id) {
+              return envelopeEdit;
             } else {
               return envelope;
             }

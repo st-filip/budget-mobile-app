@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-text-center">
-  <form #envelopeForm="ngForm" (ngSubmit)="onAddEnvelope()">
+  <form #envelopeForm="ngForm" (ngSubmit)="onSubmit()">
     <ion-grid>
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
@@ -18,7 +18,7 @@
               type="text"
               label="Category"
               label-placement="floating"
-              ngModel
+              [(ngModel)]="envelopeEdit && envelopeEdit.category"
               name="category"
               required
             ></ion-input>
@@ -32,7 +32,7 @@
               type="number"
               [label]="envelopeForm.value.type === 'Goal' ? 'Goal' : 'Budget'"
               label-placement="floating"
-              ngModel
+              [(ngModel)]="envelopeEdit && envelopeEdit.budget"
               name="budget"
               required
             ></ion-input>
@@ -45,7 +45,8 @@
             <ion-select
               label="Type"
               label-placement="floating"
-              ngModel="Monthly"
+              [ngModel]="envelopeEdit ? envelopeEdit.type : 'Monthly'"
+              (ngModelChange)="envelopeEdit && (envelopeEdit.type = $event)"
               name="type"
               required
             >
@@ -64,7 +65,7 @@
             expand="block"
             [disabled]="!envelopeForm.valid"
           >
-            Add
+            {{ envelopeEdit ? "Edit" : "Add" }}
           </ion-button>
         </ion-col>
       </ion-row>

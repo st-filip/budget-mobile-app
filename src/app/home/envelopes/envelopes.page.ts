@@ -48,15 +48,17 @@ export class EnvelopesPage implements OnInit, ViewWillEnter {
     });
   }
 
-  async openModal() {
+  async openModal(envelope?: Envelope) {
+    console.log(envelope);
     const modal = await this.modalCtrl.create({
       component: EnvelopeModalComponent,
+      componentProps: { envelope: envelope, editMode: !!envelope },
     });
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
 
-    if (role === 'confirm') {
+    if (role === 'confirmAdd') {
       const categoryExists = this.envelopes.some(
         (envelope) => envelope.category === data.envelopeData.category
       );
@@ -68,6 +70,30 @@ export class EnvelopesPage implements OnInit, ViewWillEnter {
             data.envelopeData.budget,
             data.envelopeData.type
           )
+          .subscribe((res) => {
+            console.log(res);
+          });
+      } else {
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: 'Category already exists.',
+          buttons: ['OK'],
+        });
+
+        await alert.present();
+      }
+    }
+
+    if (role === 'confirmEdit') {
+      const categoryExists = this.envelopes.some(
+        (envelope) =>
+          envelope.category === data.envelopeData.category &&
+          envelope.id !== data.envelopeData.id
+      );
+
+      if (!categoryExists) {
+        this.envelopesService
+          .updateEnvelope(data.envelopeData)
           .subscribe((res) => {
             console.log(res);
           });
