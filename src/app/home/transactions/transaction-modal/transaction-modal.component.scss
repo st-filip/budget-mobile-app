@@ -1,0 +1,28 @@
+ion-datetime-button {
+  width: 100%;
+}
+
+ion-datetime-button::part(native) {
+  background: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  margin: 0;
+  border-radius: 0;
+}
+
+#date-wrapper {
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+#date-wrapper p {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.md .valid-label {
+  color: #2dd55b !important;
+}

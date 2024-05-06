@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  forkJoin,
+  map,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { Envelope } from './envelope.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -166,6 +175,8 @@ export class EnvelopesService {
   }
 
   updateEnvelope(envelopeEdit: Envelope) {
+    console.log(envelopeEdit);
+
     const envelopeData: EnvelopeData = {
       user: envelopeEdit.user,
       category: envelopeEdit.category,
@@ -174,6 +185,7 @@ export class EnvelopesService {
       type: envelopeEdit.type,
     };
 
+    console.log(envelopeData);
     return this.http
       .put<void>(
         `${environment.firebaseDatabaseUrl}envelopes/${
@@ -193,5 +205,33 @@ export class EnvelopesService {
           this._envelopes.next(updatedEnvelopes);
         })
       );
+  }
+
+  updateEnvelopeAmounts(
+    envelopeAllocation: { [envelopeId: string]: number },
+    transactionType: string
+  ) {
+    console.log('Updating envelopes...');
+    for (const envelopeId in envelopeAllocation) {
+      const amount = envelopeAllocation[envelopeId];
+      const envelopeEdit = this._envelopes.value.find(
+        (envelope) => envelope.id === envelopeId
+      );
+      if (envelopeEdit) {
+        if (transactionType === 'Income') {
+          envelopeEdit.available = envelopeEdit.available + amount;
+        } else if (transactionType === 'Expense') {
+          envelopeEdit.available = envelopeEdit.available - amount;
+        }
+        this.updateEnvelope(envelopeEdit).subscribe({
+          next: (res) => {
+            console.log('Envelope updated successfully.');
+          },
+          error: (error) => {
+            console.error('Error updating envelope:', error);
+          },
+        });
+      }
+    }
   }
 }

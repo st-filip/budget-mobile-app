@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-text-center">
+  <form #transactionForm="ngForm" (ngSubmit)="onAddTransaction()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none">
+            <ion-select
+              label="Type"
+              label-placement="floating"
+              ngModel="Expense"
+              name="type"
+              (ionChange)="onTypeChange($event)"
+              required
+            >
+              <ion-select-option value="Expense">Expense</ion-select-option>
+              <ion-select-option value="Income">Income</ion-select-option>
+              <ion-select-option value="Fill_from_available"
+                >Fill from available</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="selectedType !== 'Fill_from_available'">
+        <ion-col>
+          <ion-item lines="none">
+            <ion-input
+              type="text"
+              [label]="selectedType === 'Expense' ? 'Payee' : 'Payer'"
+              label-placement="floating"
+              ngModel
+              name="party"
+              required
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="selectedType !== 'Fill_from_available'">
+        <ion-col>
+          <ion-item lines="none">
+            <ion-input
+              type="number"
+              label="Amount"
+              label-placement="floating"
+              [ngModel]="
+                selectedType === 'Expense' && totalExpense !== 0
+                  ? totalExpense
+                  : ''
+              "
+              name="amount"
+              [readonly]="selectedType === 'Expense'"
+              required
+              (ngModelChange)="calculate()"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="selectedType === 'Fill_from_available'">
+        <ion-col>
+          <ion-item lines="none">
+            <ion-input
+              label="Available amount"
+              label-placement="floating"
+              [value]="availableEnvelope?.available"
+              readonly
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item-group ngModelGroup="envelopeAllocation">
+            <ion-item-divider>
+              <ion-label> Envelopes </ion-label>
+            </ion-item-divider>
+            <ion-item lines="none" *ngIf="selectedType === 'Income'">
+              <ion-input
+                label="Available"
+                label-placement="floating"
+                [name]="availableEnvelope!.id"
+                [ngModel]="availableAmount"
+                readonly
+              ></ion-input>
+            </ion-item>
+            <ion-item lines="none" *ngFor="let envelope of envelopes">
+              <ion-input
+                type="number"
+                [label]="envelope.category"
+                label-placement="floating"
+                ngModel
+                [name]="envelope.id"
+                (ngModelChange)="calculate()"
+              ></ion-input>
+            </ion-item>
+          </ion-item-group>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none">
+            <div id="date-wrapper">
+              <p
+                color="dark"
+                [class.md]="isModalOpen"
+                [class.valid-label]="isModalOpen"
+              >
+                Date
+              </p>
+              <ion-datetime-button
+                class="ion-text-start"
+                datetime="datetime"
+              ></ion-datetime-button>
+            </div>
+          </ion-item>
+          <ion-modal
+            [keepContentsMounted]="true"
+            (willPresent)="onModalOpen()"
+            (willDismiss)="onModalClose()"
+          >
+            <ng-template>
+              <ion-datetime
+                name="date"
+                [ngModel]="maxdate"
+                [max]="maxdate"
+                presentation="date"
+                id="datetime"
+                [showDefaultButtons]="true"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none">
+            <ion-textarea
+              [autoGrow]="true"
+              label="Note"
+              label-placement="floating"
+              ngModel
+              name="note"
+            ></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            [disabled]="!transactionForm.valid"
+          >
+            Add
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
