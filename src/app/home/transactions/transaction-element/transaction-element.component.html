@@ -2,7 +2,7 @@
   <ion-item>
     <div slot="start" class="ion-text-start">
       <ion-label style="display: block; padding-bottom: 5px; margin-top: 5px">{{
-        transaction.party
+        transaction.type + " | " + transaction.party
       }}</ion-label>
       <ion-label
         color="medium"
@@ -20,7 +20,7 @@
       {{ transaction.amount | currency : "EUR" }}</ion-note
     >
   </ion-item>
-  <ion-item-options>
+  <ion-item-options *ngIf="edit">
     <ion-item-option>Edit</ion-item-option>
     <ion-item-option color="danger">Delete</ion-item-option>
   </ion-item-options>

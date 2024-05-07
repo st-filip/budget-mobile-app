@@ -19,6 +19,7 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
     date: new Date(),
     envelopeAllocation: {},
   };
+  @Input() edit: boolean = true;
 
   envelopes: Envelope[] = [];
   envelopeCategories: String[] = [];

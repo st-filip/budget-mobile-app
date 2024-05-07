@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -10,7 +10,7 @@ interface TransactionData {
   type: string;
   payee: string;
   amount: number;
-  envelope: string;
+  envelopeAllocation: string;
   note: string;
 }
 
@@ -101,6 +101,42 @@ export class TransactionsService {
         }),
         tap((transactions) => {
           this._transactions.next(transactions);
+        })
+      );
+  }
+
+  getTransactionsByEnvelopeId(envelopeId: string) {
+    return this.http
+      .get<{ [key: string]: TransactionData }>(
+        `${
+          environment.firebaseDatabaseUrl
+        }transactions.json?auth=${this.authService.getToken()}&orderBy="user"&equalTo="${this.authService.getUserId()}"`
+      )
+      .pipe(
+        map((transactionsData: any) => {
+          const transactions: Transaction[] = [];
+          for (const key in transactionsData) {
+            const transaction = transactionsData[key];
+            if (
+              transaction.envelopeAllocation &&
+              transaction.envelopeAllocation.hasOwnProperty(envelopeId)
+            ) {
+              transactions.push({
+                id: key,
+                type: transactionsData[key].type,
+                amount: transactionsData[key].amount,
+                user: transactionsData[key].user,
+                note: transactionsData[key].note,
+                date: transactionsData[key].date,
+                party: transactionsData[key].party,
+                envelopeAllocation: transactionsData[key].envelopeAllocation,
+              });
+            }
+          }
+          return transactions;
+        }),
+        tap((transactions) => {
+          console.log(transactions);
         })
       );
   }

@@ -11,24 +11,47 @@
   <div class="ion-text-center ion-margin-vertical" *ngIf="isLoading">
     <ion-spinner color="primary"></ion-spinner>
   </div>
-  <ion-list lines="full" *ngIf="!isLoading">
-    <ion-item>
-      <ion-label>Category</ion-label>
-      <ion-note slot="end">{{ envelope.category }}</ion-note>
-    </ion-item>
-    <ion-item>
-      <ion-label>Type</ion-label>
-      <ion-note slot="end">{{ envelope.type }}</ion-note>
-    </ion-item>
-    <ion-item *ngIf="envelope.type !== 'Available'">
-      <ion-label
-        >{{ envelope.type === "Goal" ? "Goal:" : "Budget:" }}</ion-label
-      >
-      <ion-note slot="end">{{ envelope.budget }}</ion-note>
-    </ion-item>
-    <ion-item>
-      <ion-label>Available</ion-label>
-      <ion-note slot="end">{{ envelope.available }}</ion-note>
-    </ion-item>
-  </ion-list>
+  <div *ngIf="!isLoading">
+    <ion-list lines="full" class="ion-no-padding">
+      <ion-item>
+        <ion-label>Category</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ envelope.category }}</ion-note
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label>Type</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ envelope.type }}</ion-note
+        >
+      </ion-item>
+      <ion-item *ngIf="envelope.type !== 'Available'">
+        <ion-label
+          >{{ envelope.type === "Goal" ? "Goal:" : "Budget:" }}</ion-label
+        >
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ envelope.budget }}</ion-note
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label>Available</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ envelope.available }}</ion-note
+        >
+      </ion-item>
+    </ion-list>
+    <ion-item-group *ngFor="let group of groupedTransactions">
+      <ion-item-divider>
+        <ion-label>{{ group.date | date: 'MMMM d, y' }}</ion-label>
+      </ion-item-divider>
+      <ion-list lines="full" class="ion-no-padding">
+        <app-transaction-element
+          *ngFor="let transaction of group.transactions"
+          [transaction]="transaction"
+          [edit]="false"
+        >
+        </app-transaction-element>
+      </ion-list>
+    </ion-item-group>
+  </div>
 </ion-content>

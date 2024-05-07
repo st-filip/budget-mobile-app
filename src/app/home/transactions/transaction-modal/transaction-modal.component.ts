@@ -104,7 +104,10 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
     console.log(this.form.value);
     const envelopeAllocation: any = {};
     Object.keys(this.form.value.envelopeAllocation).forEach((key) => {
-      if (this.form.value.envelopeAllocation[key] !== '') {
+      if (
+        this.form.value.envelopeAllocation[key] !== '' &&
+        this.form.value.envelopeAllocation[key] !== 0
+      ) {
         envelopeAllocation[key] = this.form.value.envelopeAllocation[key];
       }
     });

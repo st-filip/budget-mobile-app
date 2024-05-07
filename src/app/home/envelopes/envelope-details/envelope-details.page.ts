@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { EnvelopesService } from '../envelopes.service';
+import { TransactionsService } from '../../transactions/transactions.service';
+import { Transaction } from '../../transactions/transaction.model';
 
 @Component({
   selector: 'app-envelope-details',
@@ -19,15 +21,19 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
     type: '',
     available: 0,
   };
+  transactions?: Transaction[];
+  groupedTransactions: { date: string; transactions: Transaction[] }[] = [];
 
   isLoading: boolean = false;
 
   private envelopeSubscription!: Subscription;
+  private transactionsSubscription!: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private envelopesService: EnvelopesService
+    private envelopesService: EnvelopesService,
+    private transactionsService: TransactionsService
   ) {}
 
   ngOnInit() {
@@ -49,6 +55,7 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
                 console.error('Envelope not found');
               }
               this.isLoading = false;
+              this.fetchTransactionsByEnvelopeId(envelopeId);
             },
             error: (error) => {
               console.error('Error fetching envelope:', error);
@@ -59,9 +66,55 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
     });
   }
 
+  fetchTransactionsByEnvelopeId(envelopeId: string) {
+    this.transactionsSubscription = this.transactionsService
+      .getTransactionsByEnvelopeId(envelopeId)
+      .subscribe({
+        next: (transactions) => {
+          if (transactions) {
+            this.transactions = transactions;
+            console.log('!!!');
+            console.log(this.transactions);
+            this.groupTransactionsByDate();
+            console.log(this.groupedTransactions);
+          } else {
+            console.error('Transactions not found');
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching transactions:', error);
+        },
+      });
+  }
+
+  groupTransactionsByDate() {
+    const groupedTransactions: { [date: string]: Transaction[] } = {};
+    this.transactions?.forEach((transaction) => {
+      const date = transaction.date + '';
+      if (!groupedTransactions[date]) {
+        groupedTransactions[date] = [];
+      }
+      groupedTransactions[date].push(transaction);
+    });
+
+    // Sort the keys (dates) in descending order
+    const sortedDates = Object.keys(groupedTransactions).sort((a, b) => {
+      return new Date(b).getTime() - new Date(a).getTime();
+    });
+
+    // Map the sorted dates and transactions to the groupedTransactions array
+    this.groupedTransactions = sortedDates.map((date) => ({
+      date,
+      transactions: groupedTransactions[date],
+    }));
+  }
+
   ngOnDestroy() {
     if (this.envelopeSubscription) {
       this.envelopeSubscription.unsubscribe();
+    }
+    if (this.transactionsSubscription) {
+      this.transactionsSubscription.unsubscribe();
     }
   }
 }
