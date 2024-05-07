@@ -24,14 +24,14 @@
             >
               <ion-select-option value="Expense">Expense</ion-select-option>
               <ion-select-option value="Income">Income</ion-select-option>
-              <ion-select-option value="Fill_from_available"
+              <ion-select-option value="Fill from available"
                 >Fill from available</ion-select-option
               >
             </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="selectedType !== 'Fill_from_available'">
+      <ion-row *ngIf="selectedType !== 'Fill from available'">
         <ion-col>
           <ion-item lines="none">
             <ion-input
@@ -45,7 +45,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="selectedType !== 'Fill_from_available'">
+      <ion-row *ngIf="selectedType !== 'Fill from available'">
         <ion-col>
           <ion-item lines="none">
             <ion-input
@@ -65,7 +65,7 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row *ngIf="selectedType === 'Fill_from_available'">
+      <ion-row *ngIf="selectedType === 'Fill from available'">
         <ion-col>
           <ion-item lines="none">
             <ion-input

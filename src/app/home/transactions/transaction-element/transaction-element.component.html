@@ -1,9 +1,13 @@
 <ion-item-sliding>
   <ion-item>
     <div slot="start" class="ion-text-start">
-      <ion-label style="display: block; padding-bottom: 5px; margin-top: 5px">{{
-        transaction.type + " | " + transaction.party
-      }}</ion-label>
+      <ion-label style="display: block; padding-bottom: 5px; margin-top: 5px">
+        {{
+          transaction.type !== "Fill from available"
+            ? transaction.type + " | " + transaction.party
+            : transaction.type
+        }}
+      </ion-label>
       <ion-label
         color="medium"
         style="display: block; padding-top: 5px; margin-bottom: 5px"
@@ -14,7 +18,7 @@
     <ion-note
       slot="end"
       class="ion-text-end"
-      color="dark"
+      [color]="getAmountColor(transaction)"
       style="font-size: 0.875rem"
     >
       {{ transaction.amount | currency : "EUR" }}</ion-note

@@ -222,6 +222,12 @@ export class EnvelopesService {
           envelopeEdit.available = envelopeEdit.available + amount;
         } else if (transactionType === 'Expense') {
           envelopeEdit.available = envelopeEdit.available - amount;
+        } else {
+          if (envelopeEdit.category !== 'Available') {
+            envelopeEdit.available = envelopeEdit.available + amount;
+          } else {
+            envelopeEdit.available = envelopeEdit.available - amount;
+          }
         }
         this.updateEnvelope(envelopeEdit).subscribe({
           next: (res) => {

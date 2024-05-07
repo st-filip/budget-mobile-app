@@ -111,6 +111,18 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
         envelopeAllocation[key] = this.form.value.envelopeAllocation[key];
       }
     });
+
+    if (
+      this.form.value['type'] !== 'Expense' &&
+      this.form.value['type'] !== 'Income'
+    ) {
+      let sum: number = 0;
+      Object.keys(envelopeAllocation).forEach((key) => {
+        sum = sum + envelopeAllocation[key];
+      });
+      envelopeAllocation[this.availableEnvelope!.id] = sum;
+      console.log('FILL');
+    }
     console.log(envelopeAllocation);
 
     this.modalCtrl.dismiss(

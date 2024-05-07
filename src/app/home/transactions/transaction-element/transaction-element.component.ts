@@ -26,6 +26,14 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
 
   constructor(private envelopesService: EnvelopesService) {}
 
+  getAmountColor(transaction: Transaction): string {
+    if (transaction.type === 'Expense') {
+      return 'danger';
+    } else {
+      return 'success';
+    }
+  }
+
   ionViewWillEnter() {
     this.envelopesService.getEnvelopes().subscribe();
   }
