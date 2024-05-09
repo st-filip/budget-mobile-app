@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -137,6 +137,25 @@ export class TransactionsService {
         }),
         tap((transactions) => {
           console.log(transactions);
+        })
+      );
+  }
+
+  deleteTransaction(id: string) {
+    return this.http
+      .delete<void>(
+        `${
+          environment.firebaseDatabaseUrl
+        }transactions/${id}.json?auth=${this.authService.getToken()}`
+      )
+      .pipe(
+        switchMap(() => {
+          const updatedTransactions = this._transactions.value.filter(
+            (transaction) => transaction.id !== id
+          );
+
+          this._transactions.next(updatedTransactions);
+          return of(updatedTransactions);
         })
       );
   }

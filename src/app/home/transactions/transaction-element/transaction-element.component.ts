@@ -2,7 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Transaction } from '../transaction.model';
 import { Envelope } from '../../envelopes/envelope.model';
 import { EnvelopesService } from '../../envelopes/envelopes.service';
-import { ViewWillEnter } from '@ionic/angular';
+import { AlertController, ViewWillEnter } from '@ionic/angular';
+import { TransactionsService } from '../transactions.service';
 
 @Component({
   selector: 'app-transaction-element',
@@ -24,7 +25,11 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
   envelopes: Envelope[] = [];
   envelopeCategories: String[] = [];
 
-  constructor(private envelopesService: EnvelopesService) {}
+  constructor(
+    private envelopesService: EnvelopesService,
+    private transactionsService: TransactionsService,
+    private alertCtrl: AlertController
+  ) {}
 
   getAmountColor(transaction: Transaction): string {
     if (transaction.type === 'Expense') {
@@ -52,5 +57,54 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
         }
       }
     }
+  }
+
+  async onDelete(transactionId: string) {
+    const alert = await this.alertCtrl.create({
+      header: 'Delete',
+      message:
+        'Are you sure you want to delete this transaction? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Delete canceled');
+          },
+        },
+        {
+          text: 'Delete',
+          cssClass: 'delete-alert-button',
+          handler: () => {
+            this.transactionsService
+              .deleteTransaction(transactionId)
+              .subscribe({
+                next: (res) => {
+                  const envelopeAllocation: any = {};
+                  Object.keys(this.transaction.envelopeAllocation).forEach(
+                    (key) => {
+                      envelopeAllocation[key] =
+                        0 - this.transaction.envelopeAllocation[key];
+                    }
+                  );
+                  console.log(envelopeAllocation);
+
+                  this.envelopesService.updateEnvelopeAmounts(
+                    envelopeAllocation,
+                    this.transaction.type
+                  );
+
+                  console.log('Deleted successfully');
+                },
+                error: (error) => {
+                  console.log(error);
+                },
+              });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }
