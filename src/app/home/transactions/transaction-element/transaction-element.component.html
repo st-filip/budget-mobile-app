@@ -1,5 +1,7 @@
 <ion-item-sliding>
-  <ion-item>
+  <ion-item
+    [routerLink]="['/', 'home', 'tabs', 'transactions', transaction.id]"
+  >
     <div slot="start" class="ion-text-start">
       <ion-label style="display: block; padding-bottom: 5px; margin-top: 5px">
         {{
@@ -21,10 +23,10 @@
       [color]="getAmountColor(transaction)"
       style="font-size: 0.875rem"
     >
-      {{ transaction.amount | currency : "EUR" }}</ion-note
+      {{ transaction.amount | currency }}</ion-note
     >
   </ion-item>
-  <ion-item-options *ngIf="edit">
+  <ion-item-options>
     <ion-item-option>Edit</ion-item-option>
     <ion-item-option color="danger" (click)="onDelete(transaction.id)"
       >Delete</ion-item-option

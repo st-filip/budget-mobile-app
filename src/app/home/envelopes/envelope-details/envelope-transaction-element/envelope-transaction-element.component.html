@@ -1,0 +1,19 @@
+<ion-item>
+  <div slot="start" class="ion-text-start">
+    <ion-label>
+      {{
+        transaction.type !== "Fill from available"
+          ? transaction.type + " | " + transaction.party
+          : transaction.type
+      }}
+    </ion-label>
+  </div>
+  <ion-note
+    slot="end"
+    class="ion-text-end"
+    [color]="getAmountColor(transaction)"
+    style="font-size: 0.875rem"
+  >
+    {{ transaction.envelopeAllocation[envelope.id] | currency }}</ion-note
+  >
+</ion-item>

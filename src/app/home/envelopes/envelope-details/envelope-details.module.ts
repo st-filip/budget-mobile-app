@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { EnvelopeDetailsPageRoutingModule } from './envelope-details-routing.module';
 
 import { EnvelopeDetailsPage } from './envelope-details.page';
-import { SharedModule } from 'src/app/shared-module/shared-module.module';
+import { EnvelopeTransactionElementComponent } from './envelope-transaction-element/envelope-transaction-element.component';
 
 @NgModule({
   imports: [
@@ -15,8 +15,7 @@ import { SharedModule } from 'src/app/shared-module/shared-module.module';
     FormsModule,
     IonicModule,
     EnvelopeDetailsPageRoutingModule,
-    SharedModule,
   ],
-  declarations: [EnvelopeDetailsPage],
+  declarations: [EnvelopeDetailsPage, EnvelopeTransactionElementComponent],
 })
 export class EnvelopeDetailsPageModule {}

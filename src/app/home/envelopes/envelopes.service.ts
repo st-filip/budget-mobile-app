@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  Observable,
-  forkJoin,
-  map,
-  of,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
 import { Envelope } from './envelope.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -239,5 +230,36 @@ export class EnvelopesService {
         });
       }
     }
+  }
+
+  getEnvelopesByEnvelopeIds(envelopeIds: string[]) {
+    return this.http
+      .get<{ [key: string]: EnvelopeData }>(
+        `${
+          environment.firebaseDatabaseUrl
+        }envelopes.json?auth=${this.authService.getToken()}&orderBy="user"&equalTo="${this.authService.getUserId()}"`
+      )
+      .pipe(
+        map((envelopesData: any) => {
+          const envelopes: Envelope[] = [];
+          for (const key in envelopesData) {
+            const envelope = envelopesData[key];
+            if (envelopesData.hasOwnProperty(key)) {
+              envelopes.push({
+                id: key,
+                user: envelopesData[key].user,
+                category: envelopesData[key].category,
+                budget: envelopesData[key].budget,
+                available: envelopesData[key].available,
+                type: envelopesData[key].type,
+              });
+            }
+          }
+          return envelopes;
+        }),
+        tap((envelopes) => {
+          console.log(envelopes);
+        })
+      );
   }
 }

@@ -6,8 +6,15 @@ import { TransactionsPage } from './transactions.page';
 const routes: Routes = [
   {
     path: '',
-    component: TransactionsPage
-  }
+    component: TransactionsPage,
+  },
+  {
+    path: ':transactionId',
+    loadChildren: () =>
+      import('./transaction-details/transaction-details.module').then(
+        (m) => m.TransactionDetailsPageModule
+      ),
+  },
 ];
 
 @NgModule({

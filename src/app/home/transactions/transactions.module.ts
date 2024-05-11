@@ -8,7 +8,7 @@ import { TransactionsPageRoutingModule } from './transactions-routing.module';
 
 import { TransactionsPage } from './transactions.page';
 import { TransactionModalComponent } from './transaction-modal/transaction-modal.component';
-import { SharedModule } from 'src/app/shared-module/shared-module.module';
+import { TransactionElementComponent } from './transaction-element/transaction-element.component';
 
 @NgModule({
   imports: [
@@ -16,8 +16,11 @@ import { SharedModule } from 'src/app/shared-module/shared-module.module';
     FormsModule,
     IonicModule,
     TransactionsPageRoutingModule,
-    SharedModule,
   ],
-  declarations: [TransactionsPage, TransactionModalComponent],
+  declarations: [
+    TransactionsPage,
+    TransactionModalComponent,
+    TransactionElementComponent,
+  ],
 })
 export class TransactionsPageModule {}

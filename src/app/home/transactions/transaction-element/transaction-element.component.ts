@@ -20,7 +20,6 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
     date: new Date(),
     envelopeAllocation: {},
   };
-  @Input() edit: boolean = true;
 
   envelopes: Envelope[] = [];
   envelopeCategories: String[] = [];
@@ -52,7 +51,10 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
       if (this.transaction.envelopeAllocation.hasOwnProperty(key)) {
         const envelopeId = key;
         const envelope = this.envelopes.find((env) => env.id === envelopeId);
-        if (envelope) {
+        if (
+          envelope &&
+          this.transaction.envelopeAllocation[envelope.id] !== 0
+        ) {
           this.envelopeCategories.push(envelope.category);
         }
       }

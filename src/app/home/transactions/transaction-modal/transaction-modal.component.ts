@@ -20,11 +20,11 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
   availableAmountStart: number = 0;
   availableAmount: number = 0;
   totalExpense: number = 0;
+  income: number = 0;
 
   onTypeChange(event: any) {
     this.selectedType = event.detail.value;
     this.cdr.detectChanges();
-    this.calculate();
   }
 
   constructor(
@@ -57,15 +57,9 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
   }
 
   calculate() {
-    if (this.selectedType === 'Income') {
-      this.calculateAvailableAmount();
+    if (!isNaN(this.form.value['amount']) && this.selectedType === 'Income') {
+      this.income = this.form.value['amount'];
     }
-    if (this.selectedType === 'Expense') {
-      this.calculateTotalExpense();
-    }
-  }
-
-  calculateTotalExpense() {
     let sum = 0;
     this.envelopes.forEach((envelope) => {
       if (envelope.category !== 'Available') {
@@ -73,17 +67,8 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
       }
     });
     this.totalExpense = sum;
-  }
-
-  calculateAvailableAmount() {
-    let a = this.form.value['amount'];
-    let sum = 0;
-    this.envelopes.forEach((envelope) => {
-      if (envelope.category !== 'Available') {
-        sum += this.form.value['envelopeAllocation'][envelope.id] || 0;
-      }
-    });
-    this.availableAmount = a - sum;
+    this.availableAmount = this.income - sum;
+    this.availableAmountStart = this.availableEnvelope!.available - sum;
   }
 
   onCancel() {

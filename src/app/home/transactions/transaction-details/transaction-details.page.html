@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/quotes/tabs/explore"> </ion-back-button>
+    </ion-buttons>
+    <ion-title>Transaction details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="ion-text-center ion-margin-vertical" *ngIf="isLoading">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <ion-list lines="full" class="ion-no-padding">
+      <ion-item>
+        <ion-label>Type</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ transaction.type }}</ion-note
+        >
+      </ion-item>
+      <ion-item *ngIf="transaction.type!=='Fill from available'">
+        <ion-label>{{transaction.type==='Expense'?'Payee':'Payer'}}</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ transaction.party }}</ion-note
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label>Date</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{ transaction.date }}</ion-note
+        >
+      </ion-item>
+      <ion-item *ngIf="transaction.note">
+        <ion-grid class="ion-no-padding" style="margin: 10px 0">
+          <ion-row>
+            <ion-col size="auto" class="ion-margin-end"
+              ><ion-label>Note</ion-label></ion-col
+            >
+            <ion-col class="ion-text-end"
+              ><ion-note color="medium" style="font-size: 0.875rem"
+                >{{ transaction.note }}</ion-note
+              ></ion-col
+            >
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-list>
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>Envelopes</ion-label>
+      </ion-item-divider>
+      <ion-list lines="full" class="ion-no-padding">
+        <ion-item *ngFor="let envelope of envelopes">
+          <ion-label>{{envelope.envelope.category}}</ion-label>
+          <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+            >{{ envelope.amount}}</ion-note
+          >
+        </ion-item>
+      </ion-list>
+    </ion-item-group>
+  </div>
+</ion-content>

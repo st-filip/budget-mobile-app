@@ -53,8 +53,12 @@
               label="Amount"
               label-placement="floating"
               [ngModel]="
-                selectedType === 'Expense' && totalExpense !== 0
-                  ? totalExpense
+                selectedType === 'Expense'
+                  ? totalExpense !== 0
+                    ? totalExpense
+                    : ''
+                  : income !== 0
+                  ? income
                   : ''
               "
               name="amount"
@@ -71,7 +75,7 @@
             <ion-input
               label="Available amount"
               label-placement="floating"
-              [value]="availableEnvelope?.available"
+              [value]="availableAmountStart"
               readonly
             ></ion-input>
           </ion-item>
@@ -88,7 +92,7 @@
                 label="Available"
                 label-placement="floating"
                 [name]="availableEnvelope!.id"
-                [ngModel]="availableAmount"
+                [ngModel]="availableAmount !== 0 ? availableAmount : ''"
                 readonly
               ></ion-input>
             </ion-item>

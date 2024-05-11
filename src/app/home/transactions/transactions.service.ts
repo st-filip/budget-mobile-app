@@ -8,9 +8,10 @@ import { environment } from 'src/environments/environment';
 interface TransactionData {
   user: string;
   type: string;
-  payee: string;
+  party: string;
   amount: number;
-  envelopeAllocation: string;
+  envelopeAllocation: { [envelope: string]: number };
+  date: Date;
   note: string;
 }
 
@@ -101,6 +102,30 @@ export class TransactionsService {
         }),
         tap((transactions) => {
           this._transactions.next(transactions);
+        })
+      );
+  }
+
+  getTransaction(id: string) {
+    return this.http
+      .get<TransactionData>(
+        `${
+          environment.firebaseDatabaseUrl
+        }transactions/${id}.json?auth=${this.authService.getToken()}`
+      )
+      .pipe(
+        map((resData) => {
+          console.log(resData);
+          return {
+            id,
+            user: resData.user,
+            type: resData.type,
+            party: resData.party,
+            amount: resData.amount,
+            envelopeAllocation: resData.envelopeAllocation,
+            date: resData.date,
+            note: resData.note,
+          };
         })
       );
   }
