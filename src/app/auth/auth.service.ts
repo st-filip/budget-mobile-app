@@ -76,4 +76,8 @@ export class AuthService {
   getUserId() {
     return this.user!.id;
   }
+
+  getUserEmail() {
+    return this.user!.email;
+  }
 }

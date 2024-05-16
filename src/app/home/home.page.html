@@ -9,5 +9,36 @@
       <ion-icon name="list-outline"></ion-icon>
       Transactions
     </ion-tab-button>
+
+    <ion-tab-button id="open-modal">
+      <ion-icon name="person-outline"></ion-icon>
+      Account
+    </ion-tab-button>
+
+    <ion-modal
+      trigger="open-modal"
+      [initialBreakpoint]="1"
+      [breakpoints]="[0, 1]"
+    >
+      <ng-template>
+        <ion-grid
+          class="ion-padding-vertical"
+          style="width: 100%; text-align: center"
+        >
+          <ion-row class="ion-justify-content-center">
+            <ion-col>
+              <h4>{{this.email}}</h4>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-justify-content-center">
+            <ion-col>
+              <ion-button (click)="logout()" color="primary" expand="block"
+                >Log out
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-template>
+    </ion-modal>
   </ion-tab-bar>
 </ion-tabs>
