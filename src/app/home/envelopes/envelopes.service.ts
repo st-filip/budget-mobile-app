@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
 import { Envelope } from './envelope.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -137,30 +137,11 @@ export class EnvelopesService {
       )
       .pipe(
         switchMap(() => {
-          const deletedEnvelope = this._envelopes.value.find(
-            (envelope) => envelope.id === id
-          );
-
-          const updatedEnvelopes = this._envelopes.value.filter(
-            (envelope) => envelope.id !== id
-          );
-
-          this._envelopes.next(updatedEnvelopes);
-
-          const availableEnvelope = updatedEnvelopes.find(
-            (envelope) => envelope.category === 'Available'
-          );
-
-          if (availableEnvelope) {
-            availableEnvelope.available =
-              availableEnvelope.available + +deletedEnvelope!.available;
-
-            return this.updateEnvelope(availableEnvelope).pipe(
-              map(() => updatedEnvelopes)
-            );
-          } else {
-            return of(updatedEnvelopes);
-          }
+          return this.envelopes;
+        }),
+        take(1),
+        tap((envelopes) => {
+          this._envelopes.next(envelopes.filter((env) => env.id !== id));
         })
       );
   }
@@ -185,14 +166,14 @@ export class EnvelopesService {
         envelopeData
       )
       .pipe(
-        tap(() => {
-          const updatedEnvelopes = this._envelopes.value.map((envelope) => {
-            if (envelope.id === envelopeEdit.id) {
-              return envelopeEdit;
-            } else {
-              return envelope;
-            }
-          });
+        switchMap(() => this.envelopes),
+        take(1),
+        tap((envelopes) => {
+          const updatedEnvelopeIndex = envelopes.findIndex(
+            (env) => env.id === envelopeEdit.id
+          );
+          const updatedEnvelopes = [...envelopes];
+          updatedEnvelopes[updatedEnvelopeIndex] = envelopeEdit;
           this._envelopes.next(updatedEnvelopes);
         })
       );

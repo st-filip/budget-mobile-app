@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
@@ -175,12 +175,11 @@ export class TransactionsService {
       )
       .pipe(
         switchMap(() => {
-          const updatedTransactions = this._transactions.value.filter(
-            (transaction) => transaction.id !== id
-          );
-
-          this._transactions.next(updatedTransactions);
-          return of(updatedTransactions);
+          return this.transactions;
+        }),
+        take(1),
+        tap((transactions) => {
+          this._transactions.next(transactions.filter((tr) => tr.id !== id));
         })
       );
   }
