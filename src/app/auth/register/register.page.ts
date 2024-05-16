@@ -10,12 +10,14 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterPage implements OnInit {
   registerError: String = '';
+  isLoading: Boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
   onRegister(registerForm: NgForm) {
+    this.isLoading = true;
     console.log(registerForm);
     if (registerForm.valid) {
       this.authService.register(registerForm.value).subscribe({
@@ -24,6 +26,7 @@ export class RegisterPage implements OnInit {
           console.log(resData);
           this.registerError = '';
           this.router.navigateByUrl('login');
+          this.isLoading = false;
         },
         error: (error) => {
           console.log('Login failed');
@@ -33,6 +36,7 @@ export class RegisterPage implements OnInit {
           } else {
             this.registerError = 'Unknown register error.';
           }
+          this.isLoading = false;
         },
       });
     }

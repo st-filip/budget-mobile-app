@@ -10,12 +10,14 @@ import { NgForm } from '@angular/forms';
 })
 export class LoginPage implements OnInit {
   loginError: String = '';
+  isLoading: Boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
   onLogin(logInForm: NgForm) {
+    this.isLoading = true;
     console.log(logInForm);
     if (logInForm.valid) {
       this.authService.logIn(logInForm.value).subscribe({
@@ -24,15 +26,22 @@ export class LoginPage implements OnInit {
           console.log(resData);
           this.loginError = '';
           this.router.navigateByUrl('home');
+          this.isLoading = false;
         },
         error: (error) => {
           console.log('Login failed');
           console.log(error);
-          if (error.error.error.message === 'INVALID_LOGIN_CREDENTIALS') {
+          const code = error.error.error.message;
+          if (code === 'INVALID_LOGIN_CREDENTIALS') {
             this.loginError = 'Invalid email or password.';
+          } else if (code === 'EMAIL_NOT_FOUND') {
+            this.loginError = 'Email address could not be found.';
+          } else if (code === 'INVALID_PASSWORD') {
+            this.loginError = 'This password is not correct.';
           } else {
             this.loginError = 'Unknown login error.';
           }
+          this.isLoading = false;
         },
       });
     }
