@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-text-center">
-  <form #transactionForm="ngForm" (ngSubmit)="onAddTransaction()">
+  <form #transactionForm="ngForm" (ngSubmit)="onSubmit()">
     <ion-grid>
       <ion-row>
         <ion-col>
@@ -17,10 +17,11 @@
             <ion-select
               label="Type"
               label-placement="floating"
-              ngModel="Expense"
+              [ngModel]="transactionEdit ? transactionEdit.type : 'Expense'"
               name="type"
               (ionChange)="onTypeChange($event)"
               required
+              [disabled]="transactionEdit ? true : false"
             >
               <ion-select-option value="Expense">Expense</ion-select-option>
               <ion-select-option value="Income">Income</ion-select-option>
@@ -38,7 +39,7 @@
               type="text"
               [label]="selectedType === 'Expense' ? 'Payee' : 'Payer'"
               label-placement="floating"
-              ngModel
+              [(ngModel)]="transactionEdit && transactionEdit.party"
               name="party"
               required
             ></ion-input>
@@ -75,7 +76,7 @@
             <ion-input
               label="Available amount"
               label-placement="floating"
-              [value]="availableAmountStart"
+              [value]="availableAmountFill"
               readonly
             ></ion-input>
           </ion-item>
@@ -92,7 +93,7 @@
                 label="Available"
                 label-placement="floating"
                 [name]="availableEnvelope!.id"
-                [ngModel]="availableAmount !== 0 ? availableAmount : ''"
+                [ngModel]="availableAmount"
                 readonly
               ></ion-input>
             </ion-item>
@@ -101,7 +102,10 @@
                 type="number"
                 [label]="envelope.category"
                 label-placement="floating"
-                ngModel
+                [ngModel]="
+                  transactionEdit &&
+                  transactionEdit.envelopeAllocation[envelope.id]
+                "
                 [name]="envelope.id"
                 (ngModelChange)="calculate()"
               ></ion-input>
@@ -134,7 +138,7 @@
             <ng-template>
               <ion-datetime
                 name="date"
-                [ngModel]="maxdate"
+                [ngModel]="transactionEdit ? transactionEdit.date : maxdate"
                 [max]="maxdate"
                 presentation="date"
                 id="datetime"
@@ -151,7 +155,7 @@
               [autoGrow]="true"
               label="Note"
               label-placement="floating"
-              ngModel
+              [(ngModel)]="transactionEdit && transactionEdit.note"
               name="note"
             ></ion-textarea>
           </ion-item>
@@ -165,7 +169,7 @@
             expand="block"
             [disabled]="!transactionForm.valid"
           >
-            Add
+            {{ transaction ? "Edit" : "Add" }}
           </ion-button>
         </ion-col>
       </ion-row>

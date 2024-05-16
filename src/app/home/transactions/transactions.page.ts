@@ -53,15 +53,16 @@ export class TransactionsPage implements OnInit, ViewWillEnter {
     }));
   }
 
-  async openModal() {
+  async openModal(transaction?: Transaction) {
     const modal = await this.modalCtrl.create({
       component: TransactionModalComponent,
+      componentProps: { transaction: transaction, editMode: !!transaction },
     });
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
 
-    if (role === 'confirm') {
+    if (role === 'confirmAdd') {
       this.transactionsService
         .addTransaction(
           data.transactionData.type,
@@ -77,6 +78,64 @@ export class TransactionsPage implements OnInit, ViewWillEnter {
             data.transactionData.envelopeAllocation,
             data.transactionData.type
           );
+        });
+    }
+    if (role === 'confirmEdit') {
+      console.log(data);
+
+      this.transactionsService
+        .updateEnvelope(data.transactionData)
+        .subscribe((res) => {
+          console.log(res);
+          console.log(data.envelopeAllocationStart);
+          console.log(data.transactionData.envelopeAllocation);
+          if (
+            data.transactionData.envelopeAllocation &&
+            data.envelopeAllocationStart
+          ) {
+            const resultAllocation: any = {};
+
+            for (const key in data.envelopeAllocationStart) {
+              if (data.envelopeAllocationStart.hasOwnProperty(key)) {
+                const startValue = data.envelopeAllocationStart[key];
+                const endValue =
+                  data.transactionData.envelopeAllocation[key] ?? 0;
+                resultAllocation[key] = -(startValue - endValue);
+              }
+            }
+
+            for (const key in data.transactionData.envelopeAllocation) {
+              if (data.transactionData.envelopeAllocation.hasOwnProperty(key)) {
+                if (!data.envelopeAllocationStart.hasOwnProperty(key)) {
+                  resultAllocation[key] =
+                    data.transactionData.envelopeAllocation[key];
+                }
+              }
+            }
+
+            for (const key in data.envelopeAllocationStart) {
+              if (data.envelopeAllocationStart.hasOwnProperty(key)) {
+                if (
+                  !data.transactionData.envelopeAllocation.hasOwnProperty(key)
+                ) {
+                  resultAllocation[key] = data.envelopeAllocationStart[key];
+                }
+              }
+            }
+
+            console.log(
+              'Resulting envelope allocation after subtraction:',
+              resultAllocation
+            );
+            this.envelopesService.updateEnvelopeAmounts(
+              resultAllocation,
+              data.transactionData.type
+            );
+          } else {
+            console.error(
+              'envelopeAllocation or envelopeAllocationStart is not defined'
+            );
+          }
         });
     }
   }

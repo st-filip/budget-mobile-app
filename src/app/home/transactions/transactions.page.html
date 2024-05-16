@@ -13,6 +13,7 @@
       <app-transaction-element
         *ngFor="let transaction of group.transactions"
         [transaction]="transaction"
+        (editTransaction)="openModal($event)"
       >
       </app-transaction-element>
     </ion-list>

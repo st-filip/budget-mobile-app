@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Transaction } from '../transaction.model';
 import { Envelope } from '../../envelopes/envelope.model';
 import { EnvelopesService } from '../../envelopes/envelopes.service';
@@ -20,6 +20,9 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
     date: new Date(),
     envelopeAllocation: {},
   };
+
+  @Output() editTransaction: EventEmitter<Transaction> =
+    new EventEmitter<Transaction>();
 
   envelopes: Envelope[] = [];
   envelopeCategories: String[] = [];
@@ -53,7 +56,8 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
         const envelope = this.envelopes.find((env) => env.id === envelopeId);
         if (
           envelope &&
-          this.transaction.envelopeAllocation[envelope.id] !== 0
+          this.transaction.envelopeAllocation[envelope.id] !== 0 &&
+          this.transaction.envelopeAllocation[envelope.id] !== null
         ) {
           this.envelopeCategories.push(envelope.category);
         }
@@ -108,5 +112,9 @@ export class TransactionElementComponent implements OnInit, ViewWillEnter {
     });
 
     await alert.present();
+  }
+
+  onEdit(transaction: Transaction) {
+    this.editTransaction.emit(transaction);
   }
 }

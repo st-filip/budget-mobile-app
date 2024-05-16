@@ -8,11 +8,11 @@ import { environment } from 'src/environments/environment';
 interface TransactionData {
   user: string;
   type: string;
-  party: string;
-  amount: number;
+  party?: string;
+  amount?: number;
   envelopeAllocation: { [envelope: string]: number };
   date: Date;
-  note: string;
+  note?: string;
 }
 
 @Injectable({
@@ -180,6 +180,41 @@ export class TransactionsService {
         take(1),
         tap((transactions) => {
           this._transactions.next(transactions.filter((tr) => tr.id !== id));
+        })
+      );
+  }
+
+  updateEnvelope(transactionEdit: Transaction) {
+    console.log(transactionEdit);
+
+    const transactionData: TransactionData = {
+      user: transactionEdit.user,
+      type: transactionEdit.type,
+      party: transactionEdit.party,
+      amount: transactionEdit.amount,
+      envelopeAllocation: transactionEdit.envelopeAllocation,
+      date: transactionEdit.date,
+      note: transactionEdit.note,
+    };
+
+    console.log(transactionData);
+    return this.http
+      .put<void>(
+        `${environment.firebaseDatabaseUrl}transactions/${
+          transactionEdit.id
+        }.json?auth=${this.authService.getToken()}`,
+        transactionData
+      )
+      .pipe(
+        switchMap(() => this.transactions),
+        take(1),
+        tap((transactions) => {
+          const updatedTransactionIndex = transactions.findIndex(
+            (tr) => tr.id === transactionEdit.id
+          );
+          const updatedTransactions = [...transactions];
+          updatedTransactions[updatedTransactionIndex] = transactionEdit;
+          this._transactions.next(updatedTransactions);
         })
       );
   }
