@@ -184,7 +184,7 @@ export class TransactionsService {
       );
   }
 
-  updateEnvelope(transactionEdit: Transaction) {
+  updateTransaction(transactionEdit: Transaction) {
     console.log(transactionEdit);
 
     const transactionData: TransactionData = {

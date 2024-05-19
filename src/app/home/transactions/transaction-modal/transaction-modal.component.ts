@@ -76,6 +76,9 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
       }
       if (this.selectedType === 'Income') {
         this.income = this.transaction.amount;
+        if (this.availableEnvelope)
+          this.availableAmount =
+            this.transaction.envelopeAllocation[this.availableEnvelope?.id];
       }
       this.envelopeAllocationStart = this.transaction.envelopeAllocation;
     }
@@ -123,8 +126,6 @@ export class TransactionModalComponent implements OnInit, ViewWillEnter {
       if (
         this.form.value.envelopeAllocation[key] !== '' &&
         this.form.value.envelopeAllocation[key] !== undefined
-        // &&
-        // this.form.value.envelopeAllocation[key] !== 0
       ) {
         envelopeAllocation[key] = this.form.value.envelopeAllocation[key];
       }

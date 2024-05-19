@@ -98,5 +98,8 @@ export class TransactionDetailsPage implements OnInit, OnDestroy {
     if (this.transactionSubscription) {
       this.transactionSubscription.unsubscribe();
     }
+    if (this.envelopesSubscription) {
+      this.envelopesSubscription.unsubscribe();
+    }
   }
 }

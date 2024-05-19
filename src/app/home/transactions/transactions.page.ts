@@ -84,7 +84,7 @@ export class TransactionsPage implements OnInit, ViewWillEnter {
       console.log(data);
 
       this.transactionsService
-        .updateEnvelope(data.transactionData)
+        .updateTransaction(data.transactionData)
         .subscribe((res) => {
           console.log(res);
           console.log(data.envelopeAllocationStart);

@@ -224,16 +224,18 @@ export class EnvelopesService {
         map((envelopesData: any) => {
           const envelopes: Envelope[] = [];
           for (const key in envelopesData) {
-            const envelope = envelopesData[key];
             if (envelopesData.hasOwnProperty(key)) {
-              envelopes.push({
-                id: key,
-                user: envelopesData[key].user,
-                category: envelopesData[key].category,
-                budget: envelopesData[key].budget,
-                available: envelopesData[key].available,
-                type: envelopesData[key].type,
-              });
+              const envelope = envelopesData[key];
+              if (envelopeIds.includes(key)) {
+                envelopes.push({
+                  id: key,
+                  user: envelope.user,
+                  category: envelope.category,
+                  budget: envelope.budget,
+                  available: envelope.available,
+                  type: envelope.type,
+                });
+              }
             }
           }
           return envelopes;
