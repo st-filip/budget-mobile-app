@@ -1,0 +1,16 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Income vs. Expense</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="canvas-container">
+    <div>
+      <canvas
+        baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+      ></canvas>
+    </div>
+  </ion-card-content>
+</ion-card>

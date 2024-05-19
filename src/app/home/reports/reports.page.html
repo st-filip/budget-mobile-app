@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reports</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <div id="date-wrapper">
+            <p
+              color="dark"
+              [class.md]="isModalOpen"
+              [class.valid-label]="isModalOpen"
+            >
+              Date
+            </p>
+            <ion-datetime-button
+              class="ion-text-start"
+              datetime="datetime"
+            ></ion-datetime-button>
+          </div>
+        </ion-item>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime
+              presentation="month-year"
+              id="datetime"
+              [max]="maxdate"
+              [(ngModel)]="selectedMonth"
+            ></ion-datetime>
+          </ng-template>
+        </ion-modal>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          color="primary"
+          expand="block"
+          (click)="searchTransactions()"
+          >Search</ion-button
+        >
+      </ion-col>
+    </ion-row>
+    <div *ngIf="filteredTransactions.length === 0">
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none"
+            >No transactions for the selected month.</ion-item
+          >
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngIf="filteredTransactions.length > 0">
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Total Expense</ion-card-title>
+            </ion-card-header>
+            <ion-card-content> {{ totalExpense | currency }} </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Total Income</ion-card-title>
+            </ion-card-header>
+            <ion-card-content> {{ totalIncome | currency }} </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Balance</ion-card-title>
+            </ion-card-header>
+            <ion-card-content> {{ balance | currency }} </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <app-bar-chart-card
+            [barChartData]="barChartData"
+            [barChartOptions]="barChartOptions"
+            [barChartPlugins]="barChartPlugins"
+            [barChartLegend]="barChartLegend"
+          >
+          </app-bar-chart-card
+        ></ion-col>
+      </ion-row>
+    </div>
+  </ion-grid>
+</ion-content>
