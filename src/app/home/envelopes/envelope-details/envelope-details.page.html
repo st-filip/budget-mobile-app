@@ -19,6 +19,12 @@
           >{{ envelope.category }}</ion-note
         >
       </ion-item>
+      <ion-item *ngIf="envelope.type!=='Goal' && envelope.type!=='Available'">
+        <ion-label>Monthly status</ion-label>
+        <ion-note color="medium" style="font-size: 0.875rem" slot="end"
+          >{{getStatus()}}</ion-note
+        >
+      </ion-item>
       <ion-item>
         <ion-label>Type</ion-label>
         <ion-note color="medium" style="font-size: 0.875rem" slot="end"
@@ -27,7 +33,7 @@
       </ion-item>
       <ion-item *ngIf="envelope.type !== 'Available'">
         <ion-label
-          >{{ envelope.type === "Goal" ? "Goal:" : "Budget:" }}</ion-label
+          >{{ envelope.type === "Goal" ? "Goal" : "Budget" }}</ion-label
         >
         <ion-note color="medium" style="font-size: 0.875rem" slot="end"
           >{{ envelope.budget }}</ion-note

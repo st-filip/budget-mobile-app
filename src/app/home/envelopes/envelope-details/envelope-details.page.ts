@@ -109,6 +109,31 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
     }));
   }
 
+  getDaysInCurrentMonth(): number {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  }
+
+  getCurrentDay(): number {
+    return new Date().getDate();
+  }
+
+  calculateRemainingBudget(): number {
+    const daysInMonth = this.getDaysInCurrentMonth();
+    const currentDay = this.getCurrentDay();
+    const dailyBudget = this.envelope.budget / daysInMonth;
+    const remainingDays = daysInMonth - currentDay;
+
+    return dailyBudget * remainingDays;
+  }
+
+  getStatus(): string {
+    const result = this.envelope.available - this.calculateRemainingBudget();
+    const roundedResult = parseFloat(result.toFixed(2));
+    const status = roundedResult > 0 ? 'ahead' : 'behind';
+    return `${roundedResult} ${status}`;
+  }
+
   ngOnDestroy() {
     if (this.envelopeSubscription) {
       this.envelopeSubscription.unsubscribe();
