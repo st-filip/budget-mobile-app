@@ -94,6 +94,14 @@ export class TransactionDetailsPage implements OnInit, OnDestroy {
       });
   }
 
+  getAmountColor(transaction: Transaction): string {
+    if (transaction.type === 'Expense') {
+      return 'danger';
+    } else {
+      return 'success';
+    }
+  }
+
   ngOnDestroy() {
     if (this.transactionSubscription) {
       this.transactionSubscription.unsubscribe();

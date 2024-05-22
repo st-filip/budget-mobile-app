@@ -6,11 +6,13 @@ import { NavController } from '@ionic/angular';
 import { EnvelopesService } from '../envelopes.service';
 import { TransactionsService } from '../../transactions/transactions.service';
 import { Transaction } from '../../transactions/transaction.model';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-envelope-details',
   templateUrl: './envelope-details.page.html',
   styleUrls: ['./envelope-details.page.scss'],
+  providers: [CurrencyPipe],
 })
 export class EnvelopeDetailsPage implements OnInit, OnDestroy {
   envelope: Envelope = {
@@ -33,7 +35,8 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private envelopesService: EnvelopesService,
-    private transactionsService: TransactionsService
+    private transactionsService: TransactionsService,
+    private currencyPipe: CurrencyPipe
   ) {}
 
   ngOnInit() {
@@ -131,7 +134,8 @@ export class EnvelopeDetailsPage implements OnInit, OnDestroy {
     const result = this.envelope.available - this.calculateRemainingBudget();
     const roundedResult = parseFloat(result.toFixed(2));
     const status = roundedResult > 0 ? 'ahead' : 'behind';
-    return `${roundedResult} ${status}`;
+    const formattedCurrency = this.currencyPipe.transform(roundedResult);
+    return `${formattedCurrency} ${status}`;
   }
 
   ngOnDestroy() {

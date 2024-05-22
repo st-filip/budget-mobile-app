@@ -13,7 +13,7 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <ion-select
               label="Type"
               label-placement="floating"
@@ -34,21 +34,25 @@
       </ion-row>
       <ion-row *ngIf="selectedType !== 'Fill from available'">
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <ion-input
               type="text"
               [label]="selectedType === 'Expense' ? 'Payee' : 'Payer'"
               label-placement="floating"
               [(ngModel)]="transactionEdit && transactionEdit.party"
               name="party"
+              #party="ngModel"
               required
             ></ion-input>
+          </ion-item>
+          <ion-item lines="none" *ngIf="party.invalid && party.touched">
+            <ion-label>Must be defined.</ion-label>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row *ngIf="selectedType !== 'Fill from available'">
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <ion-input
               type="number"
               label="Amount"
@@ -66,56 +70,93 @@
               [readonly]="selectedType === 'Expense'"
               required
               (ngModelChange)="calculate()"
+              #amount="ngModel"
+              min="1"
             ></ion-input>
+          </ion-item>
+          <ion-item
+            lines="none"
+            *ngIf="
+              (selectedType == 'Expense' &&
+                amount.invalid &&
+                amount.value != '') ||
+              (selectedType == 'Income' && amount.invalid && amount.touched)
+            "
+          >
+            <ion-label>Must be at least a value of 1.</ion-label>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row *ngIf="selectedType === 'Fill from available'">
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <ion-input
+              type="number"
               label="Available amount"
               label-placement="floating"
-              [value]="availableAmountFill"
+              name="availableAmountFill"
               readonly
+              [ngModel]="availableAmountFill"
+              min="0"
+              #aaf="ngModel"
             ></ion-input>
+          </ion-item>
+          <ion-item lines="none" *ngIf="aaf.invalid && aaf.value != ''">
+            <ion-label>Can't be negative.</ion-label>
           </ion-item>
         </ion-col>
       </ion-row>
+
       <ion-row>
         <ion-col>
           <ion-item-group ngModelGroup="envelopeAllocation">
             <ion-item-divider>
               <ion-label> Envelopes </ion-label>
             </ion-item-divider>
-            <ion-item lines="none" *ngIf="selectedType === 'Income'">
-              <ion-input
-                label="Available"
-                label-placement="floating"
-                [name]="availableEnvelope!.id"
-                [ngModel]="availableAmount"
-                readonly
-              ></ion-input>
-            </ion-item>
-            <ion-item lines="none" *ngFor="let envelope of envelopes">
-              <ion-input
-                type="number"
-                [label]="envelope.category"
-                label-placement="floating"
-                [ngModel]="
-                  transactionEdit &&
-                  transactionEdit.envelopeAllocation[envelope.id]
-                "
-                [name]="envelope.id"
-                (ngModelChange)="calculate()"
-              ></ion-input>
-            </ion-item>
+            <div *ngIf="selectedType === 'Income'">
+              <ion-item lines="full">
+                <ion-input
+                  type="number"
+                  label="Available"
+                  label-placement="floating"
+                  [name]="availableEnvelope!.id"
+                  [ngModel]="availableAmount"
+                  min="0"
+                  readonly
+                  #ea="ngModel"
+                ></ion-input>
+              </ion-item>
+              <ion-item lines="none" *ngIf="ea.invalid && ea.touched">
+                <ion-label>Can't be negative.</ion-label>
+              </ion-item>
+            </div>
+            <div *ngFor="let envelope of envelopes">
+              <ion-item lines="full">
+                <ion-input
+                  #envelope="ngModel"
+                  type="number"
+                  min="0"
+                  [label]="envelope.category"
+                  label-placement="floating"
+                  [ngModel]="
+                    transactionEdit &&
+                    transactionEdit.envelopeAllocation[envelope.id]
+                  "
+                  [name]="envelope.id"
+                  (ngModelChange)="calculate()"
+                  #env="ngModel"
+                ></ion-input>
+              </ion-item>
+              <ion-item lines="none" *ngIf="env.invalid && env.touched">
+                <ion-label>Must be at least a value of 1.</ion-label>
+              </ion-item>
+            </div>
           </ion-item-group>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <div id="date-wrapper">
               <p
                 color="dark"
@@ -150,7 +191,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item lines="none">
+          <ion-item lines="full">
             <ion-textarea
               [autoGrow]="true"
               label="Note"

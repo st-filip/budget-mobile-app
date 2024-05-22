@@ -28,7 +28,7 @@
       <ion-item>
         <ion-label>Date</ion-label>
         <ion-note color="medium" style="font-size: 0.875rem" slot="end"
-          >{{ transaction.date }}</ion-note
+          >{{ transaction.date | date: 'MMMM d, y' }}</ion-note
         >
       </ion-item>
       <ion-item *ngIf="transaction.note">
@@ -53,8 +53,11 @@
       <ion-list lines="full" class="ion-no-padding">
         <ion-item *ngFor="let envelope of envelopes">
           <ion-label>{{envelope.envelope.category}}</ion-label>
-          <ion-note color="medium" style="font-size: 0.875rem" slot="end"
-            >{{ envelope.amount}}</ion-note
+          <ion-note
+            [color]="(envelope.envelope.category === 'Available' && transaction.type === 'Fill from available') ? 'danger' : getAmountColor(transaction)"
+            style="font-size: 0.875rem"
+            slot="end"
+            >{{ envelope.amount | currency }}</ion-note
           >
         </ion-item>
       </ion-list>

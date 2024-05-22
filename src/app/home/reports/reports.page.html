@@ -8,7 +8,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-item lines="none">
+        <ion-item lines="full">
           <div id="date-wrapper">
             <p
               color="dark"
@@ -23,7 +23,11 @@
             ></ion-datetime-button>
           </div>
         </ion-item>
-        <ion-modal [keepContentsMounted]="true">
+        <ion-modal
+          [keepContentsMounted]="true"
+          (willPresent)="onModalOpen()"
+          (willDismiss)="onModalClose()"
+        >
           <ng-template>
             <ion-datetime
               presentation="month-year"

@@ -36,13 +36,13 @@
           >{{ envelope.type === "Goal" ? "Goal" : "Budget" }}</ion-label
         >
         <ion-note color="medium" style="font-size: 0.875rem" slot="end"
-          >{{ envelope.budget }}</ion-note
+          >{{ envelope.budget | currency }}</ion-note
         >
       </ion-item>
       <ion-item>
         <ion-label>Available</ion-label>
         <ion-note color="medium" style="font-size: 0.875rem" slot="end"
-          >{{ envelope.available }}</ion-note
+          >{{ envelope.available | currency }}</ion-note
         >
       </ion-item>
     </ion-list>
