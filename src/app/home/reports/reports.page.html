@@ -41,10 +41,7 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <ion-button
-          color="primary"
-          expand="block"
-          (click)="searchTransactions()"
+        <ion-button expand="block" (click)="searchTransactions()"
           >Search</ion-button
         >
       </ion-col>
@@ -63,17 +60,17 @@
         <ion-col>
           <ion-card>
             <ion-card-header>
-              <ion-card-title>Total Expense</ion-card-title>
+              <ion-card-title>Total Income</ion-card-title>
             </ion-card-header>
-            <ion-card-content> {{ totalExpense | currency }} </ion-card-content>
+            <ion-card-content> {{ totalIncome | currency }} </ion-card-content>
           </ion-card>
         </ion-col>
         <ion-col>
           <ion-card>
             <ion-card-header>
-              <ion-card-title>Total Income</ion-card-title>
+              <ion-card-title>Total Expense</ion-card-title>
             </ion-card-header>
-            <ion-card-content> {{ totalIncome | currency }} </ion-card-content>
+            <ion-card-content> {{ totalExpense | currency }} </ion-card-content>
           </ion-card>
         </ion-col>
       </ion-row>

@@ -18,7 +18,7 @@ export class ReportsPage implements OnInit, ViewWillEnter {
   totalIncome: number = 0;
   balance: number = 0;
 
-  title = 'ng2-charts-demo';
+  title = 'income vs expense';
 
   public barChartLegend = false;
   public barChartPlugins = [];
@@ -99,8 +99,16 @@ export class ReportsPage implements OnInit, ViewWillEnter {
     this.barChartData = {
       labels: [this.formatdate(this.selectedMonth)],
       datasets: [
-        { data: [this.totalIncome], label: 'Total income' },
-        { data: [this.totalExpense], label: 'Total expense' },
+        {
+          data: [this.totalIncome],
+          label: 'Total income',
+          backgroundColor: this.getCssVariableValue('--ion-color-success'),
+        },
+        {
+          data: [this.totalExpense],
+          label: 'Total expense',
+          backgroundColor: this.getCssVariableValue('--ion-color-danger'),
+        },
       ],
     };
   }
@@ -112,5 +120,10 @@ export class ReportsPage implements OnInit, ViewWillEnter {
     });
     const formattedDate = `${formattedMonth} ${year}`;
     return formattedDate;
+  }
+
+  getCssVariableValue(variable: string): string {
+    const rootStyles = getComputedStyle(document.documentElement);
+    return rootStyles.getPropertyValue(variable).trim();
   }
 }
