@@ -1,9 +1,26 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, take, tap } from 'rxjs';
 import { Transaction } from './transaction.model';
 import { AuthService } from 'src/app/auth/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+
+export interface ITransactionsService {
+  transactions: Observable<Transaction[]>;
+  addTransaction(
+    type: string,
+    party: string,
+    amount: number,
+    envelopeAllocation: { [envelope: string]: number },
+    date: Date,
+    note: string
+  ): Observable<any>;
+  getTransactions(): Observable<Transaction[]>;
+  getTransaction(id: string): Observable<Transaction>;
+  getTransactionsByEnvelopeId(envelopeId: string): Observable<Transaction[]>;
+  deleteTransaction(id: string): Observable<Transaction[]>;
+  updateTransaction(transactionEdit: Transaction): Observable<Transaction[]>;
+}
 
 interface TransactionData {
   user: string;
@@ -18,7 +35,7 @@ interface TransactionData {
 @Injectable({
   providedIn: 'root',
 })
-export class TransactionsService {
+export class TransactionsService implements ITransactionsService {
   private _transactions = new BehaviorSubject<Transaction[]>([]);
 
   get transactions() {

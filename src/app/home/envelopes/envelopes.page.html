@@ -3,9 +3,10 @@
     <ion-title>Envelopes</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <!-- Monthly Envelopes -->
+  <div *ngIf="envelopes.length === 0">
+    <p class="ion-padding-horizontal">There are no envelopes.</p>
+  </div>
   <ion-item-group *ngIf="monthlyEnvelopes.length!==0">
     <ion-item-divider>
       <ion-label> Monthly </ion-label>
@@ -18,8 +19,6 @@
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
-
-  <!-- Annual Envelopes -->
   <ion-item-group *ngIf="annualEnvelopes.length!==0">
     <ion-item-divider>
       <ion-label> Annual </ion-label>
@@ -32,8 +31,6 @@
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
-
-  <!-- Goals Envelopes -->
   <ion-item-group *ngIf="goalsEnvelopes.length!==0">
     <ion-item-divider>
       <ion-label> Goals </ion-label>
@@ -46,8 +43,6 @@
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
-
-  <!-- Available Envelopes -->
   <ion-item-group *ngIf="availableEnvelopes.length!==0">
     <ion-item-divider>
       <ion-label> Available </ion-label>
@@ -59,8 +54,6 @@
       ></app-envelope-element>
     </ion-list>
   </ion-item-group>
-
-  <!-- Floating Action Button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="openModal()">
       <ion-icon size="large" name="add"></ion-icon>

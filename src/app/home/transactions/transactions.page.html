@@ -5,6 +5,9 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="transactions.length === 0">
+    <p class="ion-padding-horizontal">There are no transactions.</p>
+  </div>
   <ion-item-group *ngFor="let group of groupedTransactions">
     <ion-item-divider>
       <ion-label>{{ group.date | date: 'MMMM d, y' }}</ion-label>

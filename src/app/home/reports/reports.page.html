@@ -15,7 +15,7 @@
               [class.md]="isModalOpen"
               [class.valid-label]="isModalOpen"
             >
-              Date
+              Month
             </p>
             <ion-datetime-button
               class="ion-text-start"
@@ -34,6 +34,7 @@
               id="datetime"
               [max]="maxdate"
               [(ngModel)]="selectedMonth"
+              [showDefaultButtons]="true"
             ></ion-datetime>
           </ng-template>
         </ion-modal>
@@ -50,7 +51,7 @@
       <ion-row>
         <ion-col>
           <ion-item lines="none"
-            >No transactions for the selected month.</ion-item
+            >There are no transactions for the selected month.</ion-item
           >
         </ion-col>
       </ion-row>

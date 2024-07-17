@@ -1,9 +1,23 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, take, tap } from 'rxjs';
 import { Envelope } from './envelope.model';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
 import { environment } from 'src/environments/environment';
+
+export interface IEnvelopesService {
+  envelopes: Observable<Envelope[]>;
+  addEnvelope(category: string, budget: number, type: string): Observable<any>;
+  getEnvelopes(): Observable<Envelope[]>;
+  getEnvelope(id: string): Observable<Envelope>;
+  deleteEnvelope(id: string): Observable<Envelope[]>;
+  updateEnvelope(envelopeEdit: Envelope): Observable<Envelope[]>;
+  updateEnvelopeAmounts(
+    envelopeAllocation: { [envelopeId: string]: number },
+    transactionType: string
+  ): void;
+  getEnvelopesByEnvelopeIds(envelopeIds: string[]): Observable<Envelope[]>;
+}
 
 interface EnvelopeData {
   user: string;
@@ -16,7 +30,7 @@ interface EnvelopeData {
 @Injectable({
   providedIn: 'root',
 })
-export class EnvelopesService {
+export class EnvelopesService implements IEnvelopesService {
   private _envelopes = new BehaviorSubject<Envelope[]>([]);
 
   get envelopes() {

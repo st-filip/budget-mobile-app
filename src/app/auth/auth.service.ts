@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { User } from './user.model';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+
 export interface AuthResponseData {
   kind: string;
   idToken: string;
@@ -13,6 +14,16 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+export interface IAuthService {
+  readonly isUserAuthenticated: boolean;
+  logIn(user: UserData): Observable<AuthResponseData>;
+  register(user: UserData): Observable<AuthResponseData>;
+  logOut(): void;
+  getToken(): string | undefined | null;
+  getUserId(): string;
+  getUserEmail(): string;
+}
+
 export interface UserData {
   email: string;
   password: string;
@@ -21,7 +32,7 @@ export interface UserData {
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements IAuthService {
   private _isUserAuthenticated = false;
   user: User | undefined | null;
   constructor(private http: HttpClient) {}
